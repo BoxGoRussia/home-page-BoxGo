@@ -280,34 +280,35 @@
 
   <!-- Отправка в Google Sheets — отдельный блок -->
 <script>
-  // рабочий Web App URL (тот, что у тебя сработал вручную)
   const GS_URL = 'https://script.google.com/macros/s/AKfycbzftWuD5KbkajN8A4FR9yIeyBGouv5sNKtjCjh_yHW73gq67grwE-_FYHO9pHvsprhL9g/exec';
   const GS_KEY = 'boxgo-2025';
 
   function logToSheet(fio, phone){
-    const qs = new URLSearchParams({
+    // уникальный идентификатор для защиты от дублей
+    const uuid = (self.crypto && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : Date.now().toString(36)+Math.random().toString(36).slice(2);
+
+    const body = new URLSearchParams({
       key: GS_KEY,
       fio,
       phone,
       ua: navigator.userAgent,
-      ref: location.href
+      ref: location.href,
+      uuid
     }).toString();
 
-    // 1) GET-beacon — обходит любые CORS
-    new Image().src = GS_URL + '?' + qs + '&t=' + Date.now();
-
-    // 2) sendBeacon (если поддерживается)
+    // один запрос: sendBeacon (если есть) ИЛИ fetch
     if (navigator.sendBeacon) {
-      navigator.sendBeacon(GS_URL, qs);
+      navigator.sendBeacon(GS_URL, body);
+    } else {
+      fetch(GS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body
+      });
     }
-
-    // 3) дублирующий POST (на случай, если 1-2 не сработали)
-    fetch(GS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: qs
-    });
   }
 </script>
 </body>
