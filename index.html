@@ -285,21 +285,20 @@
 
   function logToSheet(fio, phone){
     const uuid = (crypto.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2));
-    const body = new URLSearchParams({
-      key: GS_KEY, fio, phone, ua: navigator.userAgent, ref: location.href, uuid
+
+    const qs = new URLSearchParams({
+      key: GS_KEY,
+      fio,
+      phone,
+      ua: navigator.userAgent,
+      ref: location.href,
+      uuid
     }).toString();
 
-    // sendBeacon с корректным типом (чтобы Apps Script получил e.parameter)
-    const blob = new Blob([body], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
-    if (!navigator.sendBeacon || !navigator.sendBeacon(GS_URL, blob)) {
-      // fallback
-      fetch(GS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
-        body
-      });
-    }
+    // единственный вызов: GET-beacon (без CORS и с параметрами)
+    const img = new Image();
+    img.referrerPolicy = 'no-referrer';
+    img.src = `${GS_URL}?${qs}&t=${Date.now()}`;
   }
 </script>
 </body>
