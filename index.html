@@ -279,27 +279,36 @@
   </script>
 
   <!-- Отправка в Google Sheets — отдельный блок -->
-  <script>
-    // ЗАМЕНИ на свои значения:
-    const GS_URL = 'https://script.google.com/macros/s/AKfycbyQSkgLY_OIRrnR59E8AGCa4POQ85vhMykJzzVNFqEuAOaUfMXsYoTz9cuBt3HoJqCKUw/exec';
-    const GS_KEY = 'boxgo-2025'; // тот же ключ должен быть в Apps Script (const SECRET_KEY = 'YOUR_SECRET_KEY')
+<script>
+  // рабочий Web App URL (тот, что у тебя сработал вручную)
+  const GS_URL = 'https://script.google.com/macros/s/AKfycbzftWuD5KbkajN8A4FR9yIeyBGouv5sNKtjCjh_yHW73gq67grwE-_FYHO9pHvsprhL9g/exec';
+  const GS_KEY = 'boxgo-2025';
 
-    function logToSheet(fio, phone){
-      const payload = new URLSearchParams({
-        key: GS_KEY,
-        fio,
-        phone,
-        ua: navigator.userAgent,
-        ref: location.href
-      }).toString();
+  function logToSheet(fio, phone){
+    const qs = new URLSearchParams({
+      key: GS_KEY,
+      fio,
+      phone,
+      ua: navigator.userAgent,
+      ref: location.href
+    }).toString();
 
-      fetch(GS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: payload
-      });
+    // 1) GET-beacon — обходит любые CORS
+    new Image().src = GS_URL + '?' + qs + '&t=' + Date.now();
+
+    // 2) sendBeacon (если поддерживается)
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(GS_URL, qs);
     }
-  </script>
+
+    // 3) дублирующий POST (на случай, если 1-2 не сработали)
+    fetch(GS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: qs
+    });
+  }
+</script>
 </body>
 </html>
