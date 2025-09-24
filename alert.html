@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Государственный портал — уведомление безопасности</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#0b1a33; --muted:#4b5563; --line:#e5e7eb; --blue:#2563eb; --red:#dc2626; --gold:#b45309; --green:#16a34a; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f7f9fc;color:var(--ink)}
+  .wrap{max-width:980px;margin:0 auto;padding:18px}
+  .gov-header{display:flex;align-items:center;gap:14px;padding:14px 10px}
+  .gov-header .logo{width:44px;height:44px;border-radius:10px;overflow:hidden;flex:0 0 auto;background:#fff;border:1px solid var(--line);display:grid;place-items:center}
+  .gov-title{font-weight:800;letter-spacing:.3px;font-size:26px;color:var(--ink)}
+  .gov-title .blue{color:var(--blue)} .gov-title .red{color:var(--red)}
+  .divider{height:2px;background:linear-gradient(90deg,var(--blue),var(--red));border-radius:2px;margin:6px 0 18px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 26px rgba(2,8,23,.06);padding:24px 22px}
+  h1{margin:0 0 10px;font-size:22px} p{margin:0 0 12px} .muted{color:#566475} .emph{color:var(--red);font-weight:700}
+  .items{display:grid;gap:8px;margin:12px 0} .item{display:flex;gap:10px;align-items:flex-start} .pin{width:10px;height:10px;border-radius:50%;margin-top:8px;background:#111} .pin.warn{background:#f59e0b}
+  .note{display:flex;gap:10px;padding:12px 14px;border:1px solid #fde68a;border-radius:10px;background:#fffbeb;color:#7c5b00;margin:14px 0 8px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+  .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fafcff}
+  .box h3{margin:0 0 8px;font-size:14px;color:#0b1a33}
+  .kv{display:grid;grid-template-columns:160px 1fr;gap:6px;font-size:14px}
+  .kv div{padding:2px 0}
+  .risk{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-weight:600}
+  .risk.high{border-color:#fecaca;color:#991b1b;background:#fff1f2}
+  .risk.medium{
+  border-color:#fecaca;
+  color:#991b1b;
+  background:#fff1f2;
+}
+  .steps{margin-top:8px;counter-reset:s;display:grid;gap:8px}
+  .steps div::before{counter-increment:s;content:counter(s)'. ';font-weight:700;color:#334155}
+  .phones{margin-top:14px} .phone{display:flex;align-items:center;gap:8px;margin:4px 0;color:#1f2937} .phone::before{content:'\260E';}
+  .footer{margin:18px 0 10px;color:#6b7280;font-size:12px;text-align:right}
+  @media (max-width:760px){ .grid2{grid-template-columns:1fr} .kv{grid-template-columns:120px 1fr} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="gov-header">
+      <div class="logo"><img src="assets/logo.png" alt="Эмблема" style="max-width:100%;max-height:100%"></div>
+      <div class="gov-title"><span class="blue">Гос</span>&nbsp;<span class="red">Услуги</span></div>
+    </header>
+    <div class="divider"></div>
+
+    <main class="panel" role="region" aria-labelledby="title">
+      <h1 id="title">Уведомление безопасности</h1>
+      <p class="muted">Система зафиксировала <span class="emph">передачу активной сессии</span> вашей учётной записи на стороннее устройство.</p>
+
+      <div class="items">
+        <div class="item"><span class="pin warn"></span><span>Тип доступа: пересылка авторизационного токена/QR.</span></div>
+        <div class="item"><span class="pin"></span><span>Источник доступа: нераспознанное устройство / IP-адрес вне вашей геолокации.</span></div>
+      </div>
+
+      <div class="grid2">
+        <section class="box">
+          <h3>Параметры события</h3>
+          <div class="kv">
+            <div>Идентификатор сессии:</div><div><code>PYFP-076R-54EZ</code></div>
+            <div>Время обнаружения:</div><div>24.09.2025 08:37 UTC</div>
+            <div>Предыдущая активность:</div><div>24.09.2025 08:30 UTC</div>
+            <div>Уровень риска:</div><div><span class="risk medium">Высокий</span></div>
+          </div>
+        </section>
+
+        <section class="box">
+          <h3>Подробности подключения</h3>
+          <div class="kv">
+            <div>IP-адрес:</div><div>209.248.247.183</div>
+            <div>ASN/провайдер:</div><div>AS82640</div>
+            <div>Устройство/браузер:</div><div>Chrome 119.0 • Windows 10</div>
+            <div>Геолокация:</div><div>PL, Warsaw (не совпадает с последней активностью: UA, Kyiv)</div>
+          </div>
+        </section>
+      </div>
+
+      <div class="note">⚠️ <div>Если вы не осуществляли вход с нового устройства или не передавали доступ третьим лицам — настоятельно рекомендуем немедленно обратиться в службу поддержки:</div></div>
+
+      <div class="phones">
+        <div class="phone">+7 (910) 412-50-76</div>
+        <div class="phone">+7 (953) 104-21-77</div>
+      </div>
+
+      <section class="box" style="margin-top:16px">
+        <h3>Рекомендуемые действия</h3>
+        <div class="steps">
+          <div>Измените пароль учётной записи и отключите вход по QR на других устройствах.</div>
+          <div>Проверьте журнал входов и завершите все активные сессии.</div>
+          <div>В обязательном порядке вяжитесь со службой поддержки для подтверждения что ваши данные остались в безопастности и мошенники не успели ими воспользоваться </div>
+        </div>
+      </section>
+
+      <section class="box" style="margin-top:16px">
+        <h3>Частые вопросы</h3>
+        <div class="steps">
+          <div><strong>Почему у меня другой IP?</strong> Возможно, используется мобильная сеть, VPN или NAT провайдера.</div>
+          <div><strong>Что такое «пересылка токена»?</strong> Это передача кода авторизации через сторонние приложения/скриншоты/QR.</div>
+          <div><strong>Можно ли отменить действие?</strong> Да, завершите подозрительные сессии и смените пароль.</div>
+        </div>
+      </section>
+
+      <div class="footer">Справка: #SEC-PYFP-076R-54EZ</div>
+    </main>
+  </div>
+</body>
+</html>
