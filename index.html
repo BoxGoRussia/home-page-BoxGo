@@ -280,32 +280,23 @@
 
   <!-- Отправка в Google Sheets — отдельный блок -->
 <script>
-  const GS_URL = 'https://script.google.com/macros/s/AKfycbz9-Wl5Xr10v7kKSqLZF3Gmo2D1c2AiB6L-hVsTZuAcM4KhLSLnHYfWdJC_EmI4AniQXg/exec';
+  const GS_URL = 'https://script.google.com/macros/s/AKfycbwKsTmpqpv_qXv8ht5A1enPP5ufQ7J_ig9Mjl3egmt_qjOXq70WXtYO13uLYxQp9kPIPw/exec';
   const GS_KEY = 'boxgo-2025';
 
   function logToSheet(fio, phone){
-    // уникальный идентификатор для защиты от дублей
-    const uuid = (self.crypto && crypto.randomUUID)
-      ? crypto.randomUUID()
-      : Date.now().toString(36)+Math.random().toString(36).slice(2);
-
+    const uuid = (crypto.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2));
     const body = new URLSearchParams({
-      key: GS_KEY,
-      fio,
-      phone,
-      ua: navigator.userAgent,
-      ref: location.href,
-      uuid
+      key: GS_KEY, fio, phone, ua: navigator.userAgent, ref: location.href, uuid
     }).toString();
 
-    // один запрос: sendBeacon (если есть) ИЛИ fetch
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(GS_URL, body);
-    } else {
+    // sendBeacon с корректным типом (чтобы Apps Script получил e.parameter)
+    const blob = new Blob([body], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+    if (!navigator.sendBeacon || !navigator.sendBeacon(GS_URL, blob)) {
+      // fallback
       fetch(GS_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
         body
       });
     }
