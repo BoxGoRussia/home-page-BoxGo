@@ -66,16 +66,61 @@
   .why p{margin:0;color:var(--muted);font-size:14px}
 
   /* Липкая панель */
-  .sticky{position:sticky;bottom:0;background:rgba(255,255,255,.9);
-          backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:16px;margin-top:16px;padding:12px;box-shadow:var(--shadow)}
-  .sticky .row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .sticky b{font-size:16px}
-  .timer{font-variant-numeric:tabular-nums;font-weight:800;color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;border-radius:10px;padding:6px 10px}
+.sticky-warning {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.92);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid #e8edf5;
+  box-shadow: 0 -12px 28px rgba(17,34,68,.12);
+  z-index: 1000;
+}
+.sticky-warning__inner {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+}
 
-  @media (max-width:820px){
-    .phones{grid-template-columns:1fr}
-    .why{grid-template-columns:1fr}
-  }
+/* компактная «шапка» с таймером */
+.sticky-warning__title {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 10px;
+}
+.timer-badge {
+  font-weight: 800; font-size: 14px;
+  padding: 4px 10px; border-radius: 10px;
+  color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca;
+}
+
+/* кнопки во весь экран на мобайле */
+.sticky-warning .call-actions {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.call-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 52px; width: 100%;
+  border-radius: 14px; border: none;
+  background: #2563eb; color: #fff; font-weight: 800;
+  box-shadow: 0 6px 18px rgba(37,99,235,.25);
+}
+
+/* карточки телефонов аккуратно, без «кривизны» */
+.phone-card {
+  border: 1px solid #e8edf5;
+  background: linear-gradient(180deg,#ffffff,#fbfdff);
+  border-radius: 14px; padding: 12px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+
+/* мобильные правки */
+@media (max-width: 560px){
+  body { padding-bottom: 160px; } /* чтобы контент не уезжал под закреплённый блок */
+  .sticky-warning { border-radius: 16px 16px 0 0; }
+  .sticky-warning__inner { padding: 14px 14px calc(16px + env(safe-area-inset-bottom)); }
+  .sticky-warning .call-actions { grid-template-columns: 1fr; }
+  .call-btn { height: 54px; }
+}
 </style>
 </head>
 <body>
@@ -106,32 +151,6 @@
         <div class="li"><span class="dot yellow"></span><div>Тип доступа: пересылка авторизационного токена / QR.</div></div>
         <div class="li"><span class="dot black"></span><div>Источник: нераспознанное устройство / IP-адрес вне вашей геолокации.</div></div>
         <div class="li"><span class="dot red"></span><div><b>Внимание:</b> если вы не выполняли вход с нового устройства, необходимо немедленно подтвердить личность.</div></div>
-      </div>
-
-      <!-- Крупные телефоны -->
-      <div style="margin-top:12px">
-        <div style="font-weight:800;margin-bottom:6px">Немедленно свяжитесь со службой подтверждения:</div>
-        <div class="phones">
-          <div class="phone">
-            <div>
-              <div style="font-size:12px;color:#6b7280;margin-bottom:2px">Телефон 1</div>
-              <a href="tel:+79104125076" style="text-decoration:none;color:inherit"><b>+7 (910) 412-50-76</b></a>
-            </div>
-            <div class="phone-actions">
-              <a class="cta-btn cta-call" href="tel:+79104125076">Позвонить</a>
-            </div>
-          </div>
-
-          <div class="phone">
-            <div>
-              <div style="font-size:12px;color:#6b7280;margin-bottom:2px">Телефон 2</div>
-              <a href="tel:+79531042177" style="text-decoration:none;color:inherit"><b>+7 (953) 104-21-77</b></a>
-            </div>
-            <div class="phone-actions">
-              <a class="cta-btn cta-call" href="tel:+79531042177">Позвонить</a>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Почему это важно -->
