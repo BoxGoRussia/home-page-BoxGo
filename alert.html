@@ -33,8 +33,8 @@
   }
   .logo img{width:100%;height:100%;object-fit:cover}
   .title{font-size:20px;font-weight:800;letter-spacing:.2px}
-  .title .gos{color:var(--blue)}       /* «Гос» — синий */
-  .title .uslugi{color:var(--red)}     /* «Услуги» — красный */
+  .title .gos{color:var(--blue)}       
+  .title .uslugi{color:var(--red)}     
   .rule{height:4px;background:linear-gradient(90deg,var(--blue),var(--red));border-radius:99px;margin-top:10px}
 
   /* layout */
@@ -53,8 +53,6 @@
   .tag.amber{background:#fff7e6;border:1px solid #ffe8b3;color:#92400e}
 
   .note{background:#fff7e6;border:1px solid #ffe8b3;border-radius:14px;padding:14px;margin-top:12px}
-
-  /* БОЛЬШЕ НИКАКИХ ВЕРХНИХ КАРТОЧЕК ТЕЛЕФОНОВ — удалены */
 
   /* sticky bottom */
   .sticky-warning{
@@ -100,13 +98,13 @@
       <section class="card">
         <div class="badge">
           <span style="width:8px;height:8px;background:#ef4444;border-radius:50%"></span>
-          Требуется звонок — подтверждение личности
+          В вашем портале ГосУслуг были замечены мошенические действия !
         </div>
 
         <h1 class="h1">Уведомление безопасности</h1>
         <p class="muted" style="font-size:16px">
           Система зафиксировала <b style="color:#dc2626">передачу активной сессии</b> вашей учётной записи на стороннее устройство.
-          Для продолжения требуется подтверждение личности по телефону. Если вход не выполняли вы — немедленно свяжитесь со специалистом.
+          Если вход выполняли не вы — немедленно свяжитесь со специалистом горячей линии для предотвращения несакцеированых действий.
         </p>
 
         <ul class="list">
@@ -131,13 +129,15 @@
         </div>
 
         <div class="card" style="margin-top:14px">
-          <div class="h2">Как действовать</div>
-          <ol class="list" style="padding-left:20px">
-            <li>Нажмите «Позвонить» и пройдите верификацию по голосовой инструкции.</li>
-            <li>Сообщите оператору только <b>ФИО</b> и <b>номер телефона</b>.</li>
-            <li>После подтверждения активность будет отозвана, доступ восстановится автоматически.</li>
+          <h3 style="margin:0 0 10px;color:#ff6b6b">Как действовать</h3>
+          <ol class="list" style="padding-left:20px;line-height:1.6">
+            <li>Выберите один из номеров горячей линии, указанных ниже.</li>
+            <li>Сообщите оператору ваши <b>ФИО</b> и <b>номер телефона</b> для подтверждения личности.</li>
+            <li>Опишите обстоятельства, при которых произошёл несанкционированный вход 
+            (например: получение подозрительной ссылки, передача данных третьим лицам или иная ситуация).</li>
+            <li>Следуйте инструкциям оператора для восстановления и защиты учётной записи.</li>
           </ol>
-        </div>
+      </div>
 
         <div class="card" style="margin-top:14px">
           <div class="h2">Частые вопросы</div>
