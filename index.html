@@ -92,6 +92,35 @@
     .step.active .dot{background:#f59e0b}
     .gov-note{margin-top:14px;padding:10px 12px;border-radius:12px;background:#0c1a33;border:1px solid var(--line);font-size:12px;color:#b9c6db}
 
+.cta .btn:last-child{
+  margin-right: 8px;
+}
+
+/* на телефонах — больше отступ + учёт safe-area (вырезы/динамический остров) */
+@media (max-width: 560px){
+  /* добавим внутренний правый отступ самому ряду шапки */
+  header .nav{
+    padding-right: 16px;
+  }
+  .cta .btn:last-child{
+    margin-right: 10px;
+  }
+}
+
+/* если браузер поддерживает safe-area, используем её значение */
+@supports (padding: max(0px)){
+  header .nav{
+    /* берём максимум из обычных 16px и системной safe-area */
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  @media (max-width: 560px){
+    .cta .btn:last-child{
+      /* и саму кнопку чуть отталкиваем от края */
+      margin-right: max(10px, env(safe-area-inset-right));
+    }
+  }
+}
+    
     /* responsive */
     @media (max-width: 900px){
       .hero{grid-template-columns:1fr;gap:16px}
