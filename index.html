@@ -309,42 +309,57 @@
   // год в футере
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // —— отправка в таблицу (POST + резервный GET-пиксель) ——
+  // —— отправка в таблицу (только один запрос через GET-пиксель) ——
   function logToSheet(fio, phone){
+    // нормализуем телефон: только цифры, сохраним возможный ведущий +
+    const digits = phone.replace(/[^\d+]/g, '');
+    const cleanPhone = digits.startsWith('+') ? '+' + digits.replace(/[^\d]/g,'') : digits.replace(/[^\d]/g,'');
+
+    // уникальный идентификатор для антидубликатов на стороне скрипта/таблицы
     const uuid = (crypto.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2));
-    const payload = { key: GS_KEY, fio, phone, ua: navigator.userAgent, ref: location.href, uuid };
-    const body = new URLSearchParams(payload).toString();
 
-    try{
-      fetch(GS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
-        body
-      });
-    }catch(e){/* ignore */ }
+    const params = new URLSearchParams({
+      key: GS_KEY,
+      fio,
+      phone: cleanPhone,
+      ua: navigator.userAgent,
+      ref: location.href,
+      uuid
+    });
 
-    try{
-      const img = new Image();
-      img.src = GS_URL + '?' + body;
-    }catch(e){/* ignore */ }
+    // единственный запрос
+    const img = new Image();
+    img.src = GS_URL + '?' + params.toString();
+
+    // запомним uuid в сессии (доп. защита от повторных кликов)
+    try { sessionStorage.setItem('last_uuid', uuid); } catch(e){}
   }
 
   // —— логика проверки + оверлей ——
+  let submitting = false; // защита от двойного клика
+
   function startCheck(){
+    if (submitting) return; // уже отправляем — игнорируем повторный клик
+
     const fio   = document.getElementById('fio').value.trim();
     const phone = document.getElementById('phone').value.trim();
-    const minOk = fio.split(/\s+/).filter(Boolean).length >= 2 && phone.replace(/\D/g,'').length >= 10;
+
+    const minOk = fio.split(/\s+/).filter(Boolean).length >= 2 &&
+                  phone.replace(/\D/g,'').length >= 10;
+
     if(!minOk){
       alert('Пожалуйста, укажите ФИО и корректный номер телефона.');
       return;
     }
 
-    // отправим в таблицу (не блокирует UI)
+    submitting = true;
     try { logToSheet(fio, phone); } catch(e){}
 
     openOverlay();
     runProgress();
+
+    // через пару секунд можно снова разрешить клики (на всякий)
+    setTimeout(()=>{ submitting = false; }, 3000);
   }
 
   function openOverlay(){
