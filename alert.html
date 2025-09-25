@@ -1,203 +1,153 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Государственный портал — уведомление безопасности</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f5f7fb; --card:#fff; --border:#e6e9f2; --text:#0f172a;
-    --muted:#536079; --accent:#2563eb; --warn:#f59e0b; --danger:#ef4444;
-    --shadow:0 10px 30px rgba(15,23,42,.08); --radius:18px;
+    --bg:#f6f8fc; --card:#ffffff; --text:#0f172a; --muted:#4b5563;
+    --brand:#2563eb; --brand2:#ef4444; --line:#e5eaf1; --warn:#f59e0b;
+    --radius:16px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;font-family:Manrope,system-ui,-apple-system,Segoe UI,Roboto;background:var(--bg);color:var(--text)}
-  .container{max-width:1000px;margin:0 auto;padding:20px}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
 
-  /* Шапка */
-  header{padding:18px 0 8px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand-mark{
-    width:40px;height:40px;border-radius:12px;overflow:hidden;flex:0 0 40px;
-    background:#e8eefc;display:grid;place-items:center;border:1px solid #dbe3f8;
-  }
-  .brand-mark img{width:100%;height:100%;object-fit:contain;display:block}
-  .brand-title{font-size:24px;font-weight:800;letter-spacing:.2px;white-space:nowrap}
-  .brand-title .blue{color:#2563eb}
-  .brand-title .red{color:#ef4444}
-  .bar{height:3px;background:linear-gradient(90deg,#2563eb,#ef4444);border-radius:999px;margin-top:10px;opacity:.6}
+  .container{width:100%;max-width:920px;margin:0 auto;padding:18px}
+  header{display:flex;align-items:center;gap:12px;padding:10px 0 14px}
+  .mark{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;
+        background:linear-gradient(135deg,#3b82f6,#22d3ee); color:#fff; font-weight:800}
+  .title{font-size:20px;font-weight:800;letter-spacing:.2px}
+  .brand-accent{color:#ef4444}
+  .rule{height:4px;background:linear-gradient(90deg,#3b82f6,#ef4444);border-radius:99px;margin-top:10px}
 
-  /* Блок предупреждения */
-  .alert{margin-top:16px;border:1px solid #fde68a;background:#fffbeb;border-radius:16px;box-shadow:var(--shadow);padding:18px}
-  .alert h1{margin:0 0 6px;font-size:20px}
-  .badge{display:inline-flex;align-items:center;gap:8px;background:#fff3cd;border:1px solid #facc15;color:#7c2d12;
-         padding:6px 10px;border-radius:999px;font-weight:800;font-size:13px}
-  .badge .dot{width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.6);animation:pulse 1.5s infinite}
-  @keyframes pulse{to{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 10px 24px rgba(15,23,42,.06)}
+  .h1{font-weight:800;font-size:26px;margin:8px 0 8px}
+  .muted{color:var(--muted)}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#fff7e6;border:1px solid #ffe8b3;color:#92400e;font-weight:700}
+  .list{margin:0;padding-left:20px}
+  .list li{margin:8px 0}
 
-  .card{margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+  .note{background:#fff7e6;border:1px solid #ffe8b3;border-radius:14px;padding:14px;margin-top:12px}
 
-  .list{display:grid;gap:12px}
-  .li{display:flex;gap:12px;align-items:flex-start}
-  .li .dot{width:10px;height:10px;border-radius:50%;margin-top:6px}
-  .dot.yellow{background:#f59e0b}
-  .dot.black{background:#111827}
-  .dot.red{background:#ef4444}
-
-  /* Телефоны */
-  .phones{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
-  .phone{
+  /* карточки телефонов сверху (без подписей) */
+  .phones-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .phone-card{
     display:flex;align-items:center;justify-content:space-between;gap:12px;
-    border:1px dashed #f59e0b;background:#fffaf0;border-radius:14px;padding:14px 16px
+    background:linear-gradient(180deg,#fff,#fbfdff);
+    border:1px solid var(--line); border-radius:14px; padding:12px 14px;
   }
-  .phone b{font-size:22px;letter-spacing:.5px}
-  .phone-actions{display:flex;gap:10px;flex-wrap:wrap}
-  .cta-btn{appearance:none;border:none;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}
-  .cta-call{background:#2563eb;color:#fff;box-shadow:0 8px 18px rgba(37,99,235,.22);text-decoration:none;display:inline-block}
+  .phone-card .number{font-size:20px;font-weight:800;letter-spacing:.3px}
+  .phone-card .call-btn{
+    appearance:none;border:none;border-radius:12px;height:42px;padding:0 14px;
+    background:var(--brand);color:#fff;font-weight:800;cursor:pointer;
+    box-shadow:0 8px 18px rgba(37,99,235,.2);
+  }
 
-  /* Инфоблоки */
-  .why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-  .why .box{border:1px solid var(--border);border-radius:14px;background:#fff;padding:14px}
-  .why h3{margin:0 0 6px;font-size:15px}
-  .why p{margin:0;color:var(--muted);font-size:14px}
+  /* закреплённый низ */
+  .sticky-warning{
+    position:fixed; left:0; right:0; bottom:0; z-index:1000;
+    background:rgba(255,255,255,.92);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);
+    box-shadow:0 -18px 32px rgba(15,23,42,.12);
+  }
+  .sticky-inner{max-width:920px;margin:0 auto;padding:14px 18px calc(14px + env(safe-area-inset-bottom))}
+  .sticky-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .sticky-title{font-weight:800}
+  .timer{font-weight:800;font-size:14px;color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;padding:6px 10px;border-radius:10px}
 
-  /* Липкая панель */
-.sticky-warning {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  background: rgba(255,255,255,0.92);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border-top: 1px solid #e8edf5;
-  box-shadow: 0 -12px 28px rgba(17,34,68,.12);
-  z-index: 1000;
-}
-.sticky-warning__inner {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
-}
+  .sticky-phones{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sticky-phones .btn{
+    display:inline-flex;align-items:center;justify-content:center;height:54px;width:100%;
+    border-radius:14px;border:none;background:var(--brand);color:#fff;font-weight:800;
+    box-shadow:0 10px 22px rgba(37,99,235,.25); text-decoration:none;
+  }
 
-/* компактная «шапка» с таймером */
-.sticky-warning__title {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px; margin-bottom: 10px;
-}
-.timer-badge {
-  font-weight: 800; font-size: 14px;
-  padding: 4px 10px; border-radius: 10px;
-  color: #b91c1c; background: #fee2e2; border: 1px solid #fecaca;
-}
-
-/* кнопки во весь экран на мобайле */
-.sticky-warning .call-actions {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-}
-.call-btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 52px; width: 100%;
-  border-radius: 14px; border: none;
-  background: #2563eb; color: #fff; font-weight: 800;
-  box-shadow: 0 6px 18px rgba(37,99,235,.25);
-}
-
-/* карточки телефонов аккуратно, без «кривизны» */
-.phone-card {
-  border: 1px solid #e8edf5;
-  background: linear-gradient(180deg,#ffffff,#fbfdff);
-  border-radius: 14px; padding: 12px 14px;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-}
-
-/* мобильные правки */
-@media (max-width: 560px){
-  body { padding-bottom: 160px; } /* чтобы контент не уезжал под закреплённый блок */
-  .sticky-warning { border-radius: 16px 16px 0 0; }
-  .sticky-warning__inner { padding: 14px 14px calc(16px + env(safe-area-inset-bottom)); }
-  .sticky-warning .call-actions { grid-template-columns: 1fr; }
-  .call-btn { height: 54px; }
-}
+  @media (max-width: 640px){
+    .phones-grid{grid-template-columns:1fr}
+    body{padding-bottom:170px} /* чтобы контент не прятался за закреплённым низом */
+    .sticky-inner{padding:14px 14px calc(18px + env(safe-area-inset-bottom))}
+    .sticky-phones{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <div class="brand">
-        <div class="brand-mark">
-          <img src="assets/logo.png" alt="Логотип" loading="eager" decoding="async">
-        </div>
-        <div class="brand-title">
-          <span class="blue">Гос</span>&nbsp;<span class="red">Услуги</span>
-        </div>
-      </div>
-      <div class="bar"></div>
+      <div class="mark">GP</div>
+      <div class="title">Гос <span class="brand-accent">Услуги</span></div>
     </header>
+    <div class="rule"></div>
 
-    <section class="alert">
-      <div class="badge"><span class="dot"></span> Требуется звонок — подтверждение личности</div>
-      <h1>Уведомление безопасности</h1>
-      <div style="color:#4b5563">
-        Система зафиксировала <b style="color:#991b1b">передачу активной сессии</b> вашей учётной записи на стороннее устройство.
+    <section class="card" style="margin-top:16px">
+      <div class="badge">
+        <span style="width:8px;height:8px;background:#ef4444;border-radius:50%"></span>
+        Требуется звонок — подтверждение личности
+      </div>
+
+      <h1 class="h1">Уведомление безопасности</h1>
+      <p class="muted" style="font-size:16px;line-height:1.6">
+        Система зафиксировала <b style="color:#dc2626">передачу активной сессии</b> вашей учётной записи на стороннее устройство.
         Для продолжения требуется подтверждение личности по телефону.
-      </div>
-    </section>
+      </p>
 
-    <section class="card">
-      <div class="list">
-        <div class="li"><span class="dot yellow"></span><div>Тип доступа: пересылка авторизационного токена / QR.</div></div>
-        <div class="li"><span class="dot black"></span><div>Источник: нераспознанное устройство / IP-адрес вне вашей геолокации.</div></div>
-        <div class="li"><span class="dot red"></span><div><b>Внимание:</b> если вы не выполняли вход с нового устройства, необходимо немедленно подтвердить личность.</div></div>
+      <ul class="list">
+        <li>Тип доступа: пересылка авторизационного токена / QR.</li>
+        <li>Источник: нераспознанное устройство / IP-адрес вне вашей геолокации.</li>
+      </ul>
+
+      <div class="note">
+        <b>Внимание:</b> если вы не выполняли вход с нового устройства — свяжитесь со специалистом подтверждения.
       </div>
 
-      <!-- Почему это важно -->
-      <div class="why">
-        <div class="box">
-          <h3>Почему необходим звонок</h3>
-          <p>Подтверждение по телефону закрепляет сессию за вами и блокирует несанкционированный доступ.</p>
+      <!-- карточки телефонов (без тонкой подписи) -->
+      <div class="phones-grid">
+        <div class="phone-card">
+          <div class="number">+7 (910) 412-50-76</div>
+          <a class="call-btn" href="tel:+79104125076">Позвонить</a>
         </div>
-        <div class="box">
-          <h3>Что потребуется</h3>
-          <p>ФИО и дата рождения для сверки. Сотрудник не запрашивает пароли, смс-коды и ПИН-коды.</p>
+        <div class="phone-card">
+          <div class="number">+7 (953) 104-21-77</div>
+          <a class="call-btn" href="tel:+79531042177">Позвонить</a>
         </div>
-      </div>
-
-      <!-- Липкая нижняя панель -->
-      <div class="sticky">
-        <div class="row">
-          <div>
-            <b>Сделайте звонок в течение <span id="timer" class="timer">03:00</span></b>
-            <div style="color:#6b7280;font-size:13px">Чтобы отменить подозрительную активность и продолжить работу.</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <a class="cta-btn cta-call" href="tel:+79104125076">Позвонить +7 (910) 412-50-76</a>
-            <a class="cta-btn cta-call" href="tel:+79531042177" style="background:#1d4ed8">Позвонить +7 (953) 104-21-77</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card" style="margin-top:14px">
-      <div style="font-size:13px;color:#6b7280">
-        Если вы уже связались со службой подтверждения — это уведомление можно игнорировать.
       </div>
     </section>
   </div>
 
+  <!-- закреплённый низ -->
+  <div class="sticky-warning" id="sticky">
+    <div class="sticky-inner">
+      <div class="sticky-top">
+        <div class="sticky-title">Сделайте звонок в течение</div>
+        <div class="timer" id="timer">00:30</div>
+      </div>
+
+      <div class="sticky-phones">
+        <a class="btn" href="tel:+79104125076">Позвонить +7 (910) 412-50-76</a>
+        <a class="btn" href="tel:+79531042177">Позвонить +7 (953) 104-21-77</a>
+      </div>
+    </div>
+  </div>
+
 <script>
-  // Простой таймер 3:00
-  let seconds = 3*60;
-  const el = document.getElementById('timer');
-  const tick = () =>{
-    const m = String(Math.floor(seconds/60)).padStart(2,'0');
-    const s = String(seconds%60).padStart(2,'0');
-    el.textContent = `${m}:${s}`;
-    if (seconds>0) seconds--;
-  };
-  tick(); setInterval(tick, 1000);
+  // Простой таймер 30 сек.
+  (function(){
+    const el = document.getElementById('timer');
+    let s = 30;
+    const tick = () => {
+      const mm = '00';
+      const ss = (s<10?'0':'')+s;
+      el.textContent = `${mm}:${ss}`;
+      if (s>0) s--; else clearInterval(x);
+    };
+    const x = setInterval(tick, 1000);
+    tick();
+  })();
 </script>
 </body>
 </html>
