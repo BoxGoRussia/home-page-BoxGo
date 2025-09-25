@@ -10,14 +10,15 @@
 <style>
   :root{
     --bg:#f6f8fc; --card:#ffffff; --text:#0f172a; --muted:#4b5563;
-    --brand:#2563eb; --brand2:#ef4444; --line:#e5eaf1; --warn:#f59e0b;
+    --brand:#2563eb; --brand2:#ef4444; --ok:#10b981; --line:#e5eaf1; --warn:#f59e0b;
     --radius:16px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  .container{width:100%;max-width:960px;margin:0 auto;padding:18px}
 
-  .container{width:100%;max-width:920px;margin:0 auto;padding:18px}
+  /* header */
   header{display:flex;align-items:center;gap:12px;padding:10px 0 14px}
   .mark{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;
         background:linear-gradient(135deg,#3b82f6,#22d3ee); color:#fff; font-weight:800}
@@ -25,16 +26,25 @@
   .brand-accent{color:#ef4444}
   .rule{height:4px;background:linear-gradient(90deg,#3b82f6,#ef4444);border-radius:99px;margin-top:10px}
 
+  /* cards / blocks */
+  .grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 10px 24px rgba(15,23,42,.06)}
   .h1{font-weight:800;font-size:26px;margin:8px 0 8px}
+  .h2{font-weight:800;font-size:18px;margin:0 0 10px}
   .muted{color:var(--muted)}
   .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#fff7e6;border:1px solid #ffe8b3;color:#92400e;font-weight:700}
   .list{margin:0;padding-left:20px}
   .list li{margin:8px 0}
+  .kv{display:grid;grid-template-columns:160px 1fr;gap:8px 12px}
+  .kv .k{color:#64748b}
+  .tag{display:inline-flex;align-items:center;padding:6px 10px;border-radius:10px;font-weight:800}
+  .tag.red{background:#fee2e2;border:1px solid #fecaca;color:#b91c1c}
+  .tag.amber{background:#fff7e6;border:1px solid #ffe8b3;color:#92400e}
+  .tag.green{background:#dcfce7;border:1px solid #bbf7d0;color:#166534}
 
   .note{background:#fff7e6;border:1px solid #ffe8b3;border-radius:14px;padding:14px;margin-top:12px}
 
-  /* карточки телефонов сверху (без подписей) */
+  /* phones (верхние карточки, без подписей) */
   .phones-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
   .phone-card{
     display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -45,10 +55,10 @@
   .phone-card .call-btn{
     appearance:none;border:none;border-radius:12px;height:42px;padding:0 14px;
     background:var(--brand);color:#fff;font-weight:800;cursor:pointer;
-    box-shadow:0 8px 18px rgba(37,99,235,.2);
+    box-shadow:0 8px 18px rgba(37,99,235,.2); text-decoration:none;
   }
 
-  /* закреплённый низ */
+  /* sticky bottom */
   .sticky-warning{
     position:fixed; left:0; right:0; bottom:0; z-index:1000;
     background:rgba(255,255,255,.92);
@@ -56,11 +66,10 @@
     border-top:1px solid var(--line);
     box-shadow:0 -18px 32px rgba(15,23,42,.12);
   }
-  .sticky-inner{max-width:920px;margin:0 auto;padding:14px 18px calc(14px + env(safe-area-inset-bottom))}
+  .sticky-inner{max-width:960px;margin:0 auto;padding:14px 18px calc(14px + env(safe-area-inset-bottom))}
   .sticky-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
   .sticky-title{font-weight:800}
   .timer{font-weight:800;font-size:14px;color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;padding:6px 10px;border-radius:10px}
-
   .sticky-phones{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .sticky-phones .btn{
     display:inline-flex;align-items:center;justify-content:center;height:54px;width:100%;
@@ -68,9 +77,13 @@
     box-shadow:0 10px 22px rgba(37,99,235,.25); text-decoration:none;
   }
 
+  /* responsive */
+  @media (max-width: 860px){
+    .grid{grid-template-columns:1fr}
+  }
   @media (max-width: 640px){
     .phones-grid{grid-template-columns:1fr}
-    body{padding-bottom:170px} /* чтобы контент не прятался за закреплённым низом */
+    body{padding-bottom:190px} /* чтобы контент не прятался под закреплённым блоком */
     .sticky-inner{padding:14px 14px calc(18px + env(safe-area-inset-bottom))}
     .sticky-phones{grid-template-columns:1fr}
   }
@@ -84,47 +97,102 @@
     </header>
     <div class="rule"></div>
 
-    <section class="card" style="margin-top:16px">
-      <div class="badge">
-        <span style="width:8px;height:8px;background:#ef4444;border-radius:50%"></span>
-        Требуется звонок — подтверждение личности
-      </div>
-
-      <h1 class="h1">Уведомление безопасности</h1>
-      <p class="muted" style="font-size:16px;line-height:1.6">
-        Система зафиксировала <b style="color:#dc2626">передачу активной сессии</b> вашей учётной записи на стороннее устройство.
-        Для продолжения требуется подтверждение личности по телефону.
-      </p>
-
-      <ul class="list">
-        <li>Тип доступа: пересылка авторизационного токена / QR.</li>
-        <li>Источник: нераспознанное устройство / IP-адрес вне вашей геолокации.</li>
-      </ul>
-
-      <div class="note">
-        <b>Внимание:</b> если вы не выполняли вход с нового устройства — свяжитесь со специалистом подтверждения.
-      </div>
-
-      <!-- карточки телефонов (без тонкой подписи) -->
-      <div class="phones-grid">
-        <div class="phone-card">
-          <div class="number">+7 (910) 412-50-76</div>
-          <a class="call-btn" href="tel:+79104125076">Позвонить</a>
+    <div class="grid">
+      <!-- Левая колонка -->
+      <section class="card">
+        <div class="badge">
+          <span style="width:8px;height:8px;background:#ef4444;border-radius:50%"></span>
+          Требуется звонок — подтверждение личности
         </div>
-        <div class="phone-card">
-          <div class="number">+7 (953) 104-21-77</div>
-          <a class="call-btn" href="tel:+79531042177">Позвонить</a>
+
+        <h1 class="h1">Уведомление безопасности</h1>
+        <p class="muted" style="font-size:16px;line-height:1.6">
+          Система зафиксировала <b style="color:#dc2626">передачу активной сессии</b> вашей учётной записи на стороннее устройство.
+          Для продолжения требуется подтверждение личности по телефону. Если вход не выполняли вы — немедленно свяжитесь со специалистом.
+        </p>
+
+        <ul class="list">
+          <li><b>Тип доступа:</b> пересылка авторизационного токена / QR.</li>
+          <li><b>Источник:</b> нераспознанное устройство / IP-адрес вне вашей геолокации.</li>
+          <li><b>Статус:</b> ограниченный доступ до завершения проверки.</li>
+        </ul>
+
+        <div class="note">
+          <b>Важно:</b> звонок нужен только для верификации. Оператор не запрашивает пароли, коды из SMS, CVV и иные платежные данные.
         </div>
-      </div>
-    </section>
+
+        <!-- Ключевая информация -->
+        <div class="card" style="margin-top:14px">
+          <div class="h2">Детали события</div>
+          <div class="kv">
+            <div class="k">Дата и время:</div><div id="kv-time">—</div>
+            <div class="k">Обнаруженное местоположение:</div><div id="kv-loc">вне вашей геолокации</div>
+            <div class="k">Подозрительный IP:</div><div id="kv-ip">скрыт</div>
+            <div class="k">Устройство:</div><div id="kv-ua">определяется…</div>
+            <div class="k">Уровень риска:</div><div><span class="tag red">Высокий</span></div>
+          </div>
+        </div>
+
+        <!-- Шаги что делать -->
+        <div class="card" style="margin-top:14px">
+          <div class="h2">Как действовать</div>
+          <ol class="list" style="padding-left:20px">
+            <li>Нажмите «Позвонить» и пройдите верификацию по голосовой инструкции.</li>
+            <li>Сообщите оператору только <b>ФИО</b> и <b>номер телефона</b> — этого достаточно для подтверждения.</li>
+            <li>После подтверждения активность будет отозвана, доступ восстановится автоматически.</li>
+          </ol>
+        </div>
+
+        <!-- Частые вопросы -->
+        <div class="card" style="margin-top:14px">
+          <div class="h2">Частые вопросы</div>
+          <p><b>Почему сработала защита?</b><br>
+            Система заметила вход с нового устройства или передачу сессии через QR/токен. Это стандартный механизм безопасности.</p>
+          <p><b>Что будет, если не подтвердить?</b><br>
+            В целях защиты часть функций кабинета может быть временно недоступна, пока подтверждение не завершено.</p>
+          <p><b>Нужно ли сообщать коды из SMS?</b><br>
+            Нет. Секретные коды, пароли и платежные данные не требуются.</p>
+        </div>
+
+        <!-- Телефоны (верхние карточки) -->
+        <div class="phones-grid">
+          <div class="phone-card">
+            <div class="number">+7 (910) 412-50-76</div>
+            <a class="call-btn" href="tel:+79104125076">Позвонить</a>
+          </div>
+          <div class="phone-card">
+            <div class="number">+7 (953) 104-21-77</div>
+            <a class="call-btn" href="tel:+79531042177">Позвонить</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Правая колонка -->
+      <aside class="card">
+        <div class="h2">Сводка проверки</div>
+        <ul class="list">
+          <li>Подтверждение личности: <b>ожидается</b></li>
+          <li>Передача сессии: <span class="tag amber">обнаружено</span></li>
+          <li>Последняя активность: <span id="kv-last">—</span></li>
+          <li>Состояние доступа: <span class="tag amber">ограничен</span></li>
+        </ul>
+
+        <div class="h2" style="margin-top:14px">Рекомендации</div>
+        <ul class="list">
+          <li>Не передавайте QR/токены авторизации третьим лицам.</li>
+          <li>Проверьте активные сессии в личном кабинете после подтверждения.</li>
+          <li>При повторных срабатываниях — смените пароль.</li>
+        </ul>
+      </aside>
+    </div>
   </div>
 
   <!-- закреплённый низ -->
   <div class="sticky-warning" id="sticky">
     <div class="sticky-inner">
       <div class="sticky-top">
-        <div class="sticky-title">Сделайте звонок в течение</div>
-        <div class="timer" id="timer">00:30</div>
+        <div class="sticky-title">Сделайте звонок для подтверждения в течение</div>
+        <div class="timer" id="timer">05:00</div>
       </div>
 
       <div class="sticky-phones">
@@ -135,17 +203,32 @@
   </div>
 
 <script>
-  // Простой таймер 30 сек.
+  // Заполняем сводку: время, IP (маска), User-Agent, "последняя активность"
+  (function(){
+    const dt = new Date();
+    document.getElementById('kv-time').textContent =
+      dt.toLocaleString('ru-RU', {hour12:false});
+
+    document.getElementById('kv-ua').textContent = navigator.userAgent;
+    document.getElementById('kv-last').textContent =
+      dt.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+
+    // маскированный псевдо-IP, чисто визуально
+    const ip = Array.from({length:4},()=>Math.floor(Math.random()*200)+20).join('.');
+    document.getElementById('kv-ip').textContent = ip.replace(/\.\d+$/g,'.*');
+  })();
+
+  // Таймер 5 минут (05:00)
   (function(){
     const el = document.getElementById('timer');
-    let s = 30;
-    const tick = () => {
-      const mm = '00';
-      const ss = (s<10?'0':'')+s;
-      el.textContent = `${mm}:${ss}`;
-      if (s>0) s--; else clearInterval(x);
-    };
-    const x = setInterval(tick, 1000);
+    let left = 5*60; // секунд
+    function tick(){
+      const m = Math.floor(left/60);
+      const s = left%60;
+      el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if (left>0) left--; else clearInterval(t);
+    }
+    const t = setInterval(tick, 1000);
     tick();
   })();
 </script>
